@@ -1,5 +1,2 @@
-git config --global user.name "chrissy"
-git config --user.email e3100946@student.dcccd.edu
-mkdir project 1
-cd project 1
-git init
+echo -e
+
