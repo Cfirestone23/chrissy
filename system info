@@ -1,1 +1,73 @@
+cd get-system-info ; sh ./get-system-info.sh > system-info.log
 
+header(){
+echo '-------------------------------------------------------------------'
+echo $1
+echo '-------------------------------------------------------------------'
+}
+
+
+header w
+w
+
+header ifconfig
+ifconfig
+
+header 'ping gateway'
+gateway=`route -n | awk '{print \$2}' | grep -v 0.0.0.0 | grep -E '^[0-9]'`
+ping -c 300 -f $gateway | grep -v 'icmp_req'
+ping -c 300 -f -s 1024 $gateway | grep -v 'icmp_req'
+
+header 'ping 8.8.8.8'
+ping -c 300 -f 8.8.8.8 | grep -v 'icmp_req'
+ping -c 300 -f -s 1024 8.8.8.8 | grep -v 'icmp_req'
+
+header 'traceroute'
+traceroute -n 8.8.8.8
+
+header 'iptables -L -nv'
+iptables -L -nv
+
+header 'iptables -L -nv -t nat'
+iptables -L -nv -t nat
+
+header 'processes by mem'
+ps haxo pid,rss,args --sort -rss | head -15
+
+header 'processes by cpu'
+ps haxo pid,pcpu,args --sort -pcpu | head -15
+
+header 'processes'
+ps aux
+
+header meminfo
+cat /proc/meminfo
+
+header ceph
+ceph status
+
+header routing
+netstat -nr 
+
+header 'netstat -n'
+netstat -n
+header 'netstat -i'
+netstat -i
+header 'netstat -ns'
+netstat -ns
+header 'netstat -npa'
+netstat -npa
+header 'netstat -punta'
+netstat -punta
+
+header lsof
+lsof -i
+
+header sysctl
+/sbin/sysctl -a
+
+header dmesg
+dmesg
+
+header messages
+tail -1000 /var/log/messages
